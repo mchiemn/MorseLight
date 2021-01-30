@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        init();
+        init(); //Initialize buttons and text
     }
 
     public void init(){
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                 flashButton.setVisibility(View.VISIBLE);
                 Toast.makeText(MainActivity.this, "Translated!", Toast.LENGTH_SHORT).show();
             }
-        });
+        }); //Translate to Morse code on click
 
         flashButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,9 +51,10 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        });
+        }); //Use flashlight to flash Morse code on click
     }
 
+    //Method to translate text to morse
     public void translate(){
         String userString = userInputText.getText().toString();
         for (int n = 0; n < userString.length(); n++){
@@ -223,12 +224,13 @@ public class MainActivity extends AppCompatActivity {
                 case '@' :
                     morseCode.append(".--.-. ");
                     break;
-            }
+            }//end switch
         }
     }
 
 
 
+    //Method to flash Morse code
     public void flashMorse() throws InterruptedException {
         if (morseCode.getText().toString().isEmpty()) {
             Toast.makeText(MainActivity.this, "No Morse Code to Translate", Toast.LENGTH_SHORT).show();
@@ -260,6 +262,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Method to turn get access and turn on flash
     public void flashOn(){
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)){
             try{
@@ -273,6 +276,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Method to turn get access and turn off flash
     public void flashOff(){
         if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)){
             try{
