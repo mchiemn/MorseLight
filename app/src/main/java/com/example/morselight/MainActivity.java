@@ -1,23 +1,45 @@
 package com.example.morselight;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.text.Text;
+import com.google.mlkit.vision.text.TextRecognition;
+import com.google.mlkit.vision.text.TextRecognizer;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
 
     EditText userInputText;
-    Button translateButton, flashButton;
+    Button translateButton, flashButton, uploadImage;
     TextView morseCode;
+    Bitmap bitmap = null;
+    public static final int GET_FROM_GALLERY = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +51,11 @@ public class MainActivity extends AppCompatActivity {
     public void init(){
         userInputText = findViewById(R.id.UserInputText);
         translateButton = findViewById(R.id.TranslateButton);
+        uploadImage = findViewById(R.id.UploadButton);
         flashButton = findViewById(R.id.FlashButton);
         morseCode = findViewById(R.id.MorseCode);
 
+        //Translate to Morse code on click
         translateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -40,8 +64,9 @@ public class MainActivity extends AppCompatActivity {
                 flashButton.setVisibility(View.VISIBLE);
                 Toast.makeText(MainActivity.this, "Translated!", Toast.LENGTH_SHORT).show();
             }
-        }); //Translate to Morse code on click
+        });
 
+        //Use flashlight to flash Morse code on click
         flashButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -51,12 +76,21 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        }); //Use flashlight to flash Morse code on click
+        });
+
+        //Button to upload image and get text from the image
+        uploadImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI), GET_FROM_GALLERY);
+            }
+        });
     }
 
     //Method to translate text to morse
     public void translate(){
         String userString = userInputText.getText().toString();
+        //Loop through message and translate
         for (int n = 0; n < userString.length(); n++){
             switch (userString.charAt(n)) {
                 case ' ' :
@@ -228,7 +262,63 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        //Detect the requested codes
+        if(requestCode==GET_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
+            Uri selectedImage = data.getData();
+            try{
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        imageToText(); //Run method to detect text from image
+    }
+
+    public void imageToText(){
+        InputImage image = InputImage.fromBitmap(bitmap, 0);
+        TextRecognizer recognizer = TextRecognition.getClient();
+        Task<Text> result = recognizer.process(image).addOnSuccessListener(new OnSuccessListener<Text>() {
+            @Override
+            public void onSuccess(Text visionText) {
+                //Task is completed successfully, run processTextBlock method
+                processTextBlock(visionText);
+            }
+        }) .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                //Task has failed with an exception
+                e.printStackTrace();
+            }
+        });
+    }
+
+    //Method to process the text to a string variable
+    private void processTextBlock(Text result){
+        String resultText = result.getText();
+        for (Text.TextBlock block : result.getTextBlocks()) {
+            String blockText = block.getText();
+            Point[] blockCornerPoints = block.getCornerPoints();
+            Rect blockFrame = block.getBoundingBox();
+            for (Text.Line line : block.getLines()) {
+                String lineText = line.getText();
+                Point[] lineCornerPoints = line.getCornerPoints();
+                Rect lineFrame = line.getBoundingBox();
+                for (Text.Element element : line.getElements()) {
+                    String elementText = element.getText();
+                    Point[] elementCornerPoints = element.getCornerPoints();
+                    Rect elementFrame = element.getBoundingBox();
+                }
+            }
+        }
+        //Set the userInputText field to text that is detected from image
+        userInputText.setText(resultText);
+    }
 
     //Method to flash Morse code
     public void flashMorse() throws InterruptedException {
@@ -241,21 +331,21 @@ public class MainActivity extends AppCompatActivity {
                 switch (m) {
                     case ".":
                         flashOn();
-                        Thread.sleep(500);
+                        Thread.sleep(250);
                         flashOff();
-                        Thread.sleep(500);
+                        Thread.sleep(250);
                         break;
                     case "-":
                         flashOn();
-                        Thread.sleep(1500);
+                        Thread.sleep(750);
                         flashOff();
-                        Thread.sleep(500);
+                        Thread.sleep(250);
                         break;
                     case "/":
-                        Thread.sleep(1000);
+                        Thread.sleep(500);
                         break;
                     default:
-                        Thread.sleep(500);
+                        Thread.sleep(250);
                         break;
                 }
             }
