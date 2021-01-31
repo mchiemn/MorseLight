@@ -3,6 +3,7 @@ package com.example.morselight;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.app.Activity;
 import android.content.Context;
@@ -36,10 +37,12 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
 
     EditText userInputText;
-    Button translateButton, flashButton, uploadImage;
+    Button translateButton, flashButton, uploadImage, btnToggleDark;
     TextView morseCode;
     Bitmap bitmap = null;
     public static final int GET_FROM_GALLERY = 1;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +51,25 @@ public class MainActivity extends AppCompatActivity {
         init(); //Initialize buttons and text
     }
 
+
     public void init(){
         userInputText = findViewById(R.id.UserInputText);
         translateButton = findViewById(R.id.TranslateButton);
         uploadImage = findViewById(R.id.UploadButton);
         flashButton = findViewById(R.id.FlashButton);
         morseCode = findViewById(R.id.MorseCode);
+        btnToggleDark = findViewById(R.id.btnToggleDark);
+
+
+        //Dark Mode
+        btnToggleDark.setOnClickListener(
+                new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view) {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    }
+                });
+
 
         //Translate to Morse code on click
         translateButton.setOnClickListener(new View.OnClickListener() {
