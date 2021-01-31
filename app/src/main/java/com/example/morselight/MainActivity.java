@@ -16,7 +16,7 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     EditText userInputText;
-    Button translateButton, flashButton;
+    Button translateButton, cancelButton,flashButton;
     TextView morseCode;
 
     @Override
@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         translateButton = findViewById(R.id.TranslateButton);
         flashButton = findViewById(R.id.FlashButton);
         morseCode = findViewById(R.id.MorseCode);
+        cancelButton = findViewById(R.id.Cancel);
 
         translateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -295,5 +296,6 @@ public class MainActivity extends AppCompatActivity {
         //stop everything
         //god i wish i knew
         //like i thing that is like when pressed cancel all functions currently going on
+        flashOff();
     }
 }
