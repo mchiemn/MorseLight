@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -60,15 +61,37 @@ public class MainActivity extends AppCompatActivity {
         morseCode = findViewById(R.id.MorseCode);
         btnToggleDark = findViewById(R.id.btnToggleDark);
 
+        //Saving State of app using SHaredPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        final boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
 
-        //Dark Mode
-        btnToggleDark.setOnClickListener(
-                new View.OnClickListener(){
-                    @Override
-                    public void onClick(View view) {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    }
-                });
+        //When user reopens app after mode
+        if (isDarkModeOn){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            btnToggleDark.setText("Disable Dark Mode");
+        }
+        else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            btnToggleDark.setText("Enable Dark Mode");
+        }
+
+        //When user taps the dark mode button
+        btnToggleDark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isDarkModeOn){
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    editor.putBoolean("isDarkModeOn", false);
+                    editor.apply();
+                    btnToggleDark.setText("Enable Dark Mode");}
+                else{
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    editor.putBoolean("isDarkModeOn", true);
+                    editor.apply();
+                    btnToggleDark.setText("Disable Dark Mode)");}
+                }
+            });
 
 
         //Translate to Morse code on click
