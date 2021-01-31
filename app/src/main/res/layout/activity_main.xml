@@ -51,12 +51,12 @@
         android:id="@+id/FlashButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
         android:text="Flash it!"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="@+id/TranslateButton"
+        app:layout_constraintStart_toStartOf="@+id/TranslateButton"
+        app:layout_constraintTop_toBottomOf="@+id/TranslateButton" />
 
     <TextView
         android:id="@+id/or"
