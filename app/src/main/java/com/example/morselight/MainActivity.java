@@ -3,10 +3,12 @@ package com.example.morselight;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -36,10 +38,12 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
 
     EditText userInputText;
-    Button translateButton, flashButton, uploadImage;
+    Button translateButton, flashButton, uploadImage, btnToggleDark;
     TextView morseCode;
     Bitmap bitmap = null;
     public static final int GET_FROM_GALLERY = 1;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +52,47 @@ public class MainActivity extends AppCompatActivity {
         init(); //Initialize buttons and text
     }
 
+
     public void init(){
         userInputText = findViewById(R.id.UserInputText);
         translateButton = findViewById(R.id.TranslateButton);
         uploadImage = findViewById(R.id.UploadButton);
         flashButton = findViewById(R.id.FlashButton);
         morseCode = findViewById(R.id.MorseCode);
+        btnToggleDark = findViewById(R.id.btnToggleDark);
+
+        //Saving State of app using SHaredPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        final boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
+
+        //When user reopens app after mode
+        if (isDarkModeOn){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            btnToggleDark.setText("Disable Dark Mode");
+        }
+        else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            btnToggleDark.setText("Enable Dark Mode");
+        }
+
+        //When user taps the dark mode button
+        btnToggleDark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isDarkModeOn){
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    editor.putBoolean("isDarkModeOn", false);
+                    editor.apply();
+                    btnToggleDark.setText("Enable Dark Mode");}
+                else{
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    editor.putBoolean("isDarkModeOn", true);
+                    editor.apply();
+                    btnToggleDark.setText("Disable Dark Mode)");}
+                }
+            });
+
 
         //Translate to Morse code on click
         translateButton.setOnClickListener(new View.OnClickListener() {

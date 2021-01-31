@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
     tools:context=".MainActivity">
 
     <EditText
@@ -15,9 +16,10 @@
         android:gravity="center_horizontal"
         android:text="Type Your Message"
         android:textAlignment="center"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="@color/textColor"
         app:layout_constraintBottom_toTopOf="@+id/or"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/MorseCode" />
 
@@ -25,12 +27,12 @@
         android:id="@+id/TranslateButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="22dp"
-        android:layout_marginBottom="408dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginBottom="240dp"
         android:text="Translate"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btnToggleDark"
         app:layout_constraintStart_toStartOf="@+id/UploadButton"
-        app:layout_constraintTop_toBottomOf="@+id/UploadButton" />
+        app:layout_constraintTop_toBottomOf="@+id/MorseCode" />
 
     <TextView
         android:id="@+id/MorseCode"
@@ -39,10 +41,13 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="28dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="307dp"
         android:gravity="center"
+        android:lineSpacingExtra="8sp"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/UserInputText"
+        android:textColor="@color/textColor"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/TranslateButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -64,6 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:text="or"
+        android:textColor="@color/textColor"
         app:layout_constraintBottom_toTopOf="@+id/UploadButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -73,11 +79,34 @@
         android:id="@+id/UploadButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="31dp"
+        android:layout_marginEnd="28dp"
         android:layout_marginBottom="32dp"
         android:text="Upload an Image"
         app:layout_constraintBottom_toTopOf="@+id/TranslateButton"
         app:layout_constraintEnd_toEndOf="@+id/UserInputText"
         app:layout_constraintTop_toBottomOf="@+id/or" />
+
+    <Button
+        android:id="@+id/btnToggleDark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="Enable Dark Mode"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TranslateButton"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="28dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnToggleDark"
+        app:layout_constraintStart_toStartOf="@+id/btnToggleDark"
+        app:srcCompat="@drawable/ic_launcher_foreground" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
