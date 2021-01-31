@@ -290,7 +290,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Method to cancel current message if need be.
     public void Cancel(){
-
+        //stop everything
+        //god i wish i knew
+        //like i thing that is like when pressed cancel all functions currently going on
     }
 }
