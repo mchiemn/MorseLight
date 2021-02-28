@@ -16,3 +16,6 @@ allows users to be able to play the Morse Code through the phone's flashlight.
 * Nicole Nguyen
 * Arturo Salazar
 * Emmanuel Salcedo
+
+# Demo Video
+https://youtu.be/oXr-Pi2d96U
